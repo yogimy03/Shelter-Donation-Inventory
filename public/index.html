@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shelter Donation Inventory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header section with title and description -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-heart"></i> Shelter Donation Inventory</h1>
+            <p>Managing donations to help those in need</p>
+        </div>
+    </header>
+
+    <!-- Statistics dashboard section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2>Donation Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-gift"></i>
+                    <h3>Total Donations</h3>
+                    <p id="totalDonations">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>Total Money</h3>
+                    <p id="totalMoney">$0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Total Estimated Value</h3>
+                    <p id="totalEstimatedValue">$0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-list"></i>
+                    <h3>Donation Types</h3>
+                    <p id="totalTypes">0</p>
+                </div>
+            </div>
+            
+            <div class="type-breakdown">
+                <h3>Donations by Type</h3>
+                <div class="type-grid" id="typeBreakdown">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content section -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Donation form section -->
+            <section class="form-section">
+                <h2>Add New Donation</h2>
+                <form id="donationForm" class="donation-form">
+                    <div class="form-group">
+                        <label for="donorName">Donor Name *</label>
+                        <input type="text" id="donorName" name="donorName" required 
+                               placeholder="Enter donor's full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="donationType">Donation Type *</label>
+                        <select id="donationType" name="donationType" required>
+                            <option value="">Select donation type</option>
+                            <option value="money">💰 Money</option>
+                            <option value="food">🍽️ Food</option>
+                            <option value="clothing">👕 Clothing</option>
+                            <option value="electronics">📱 Electronics</option>
+                            <option value="furniture">🪑 Furniture</option>
+                            <option value="books">📚 Books</option>
+                            <option value="toys">🧸 Toys</option>
+                            <option value="medical">💊 Medical Supplies</option>
+                            <option value="hygiene">🧴 Hygiene Products</option>
+                            <option value="other">📦 Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="amount">Amount/Quantity *</label>
+                        <input type="number" id="amount" name="amount" required 
+                               placeholder="Enter amount or quantity" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimatedValue">Estimated Value (Optional)</label>
+                        <input type="number" id="estimatedValue" name="estimatedValue" 
+                               placeholder="Enter estimated value in dollars" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="form-group description-field" style="display: none;">
+                        <label for="description">Description *</label>
+                        <textarea id="description" name="description" rows="3" 
+                                  placeholder="Please describe what this donation is"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email (Optional)</label>
+                        <input type="email" id="contactEmail" name="contactEmail" 
+                               placeholder="Enter donor's email address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPhone">Contact Phone (Optional)</label>
+                        <input type="tel" id="contactPhone" name="contactPhone" 
+                               placeholder="Enter donor's phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Donation Date *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Donation
+                    </button>
+                </form>
+            </section>
+
+            <!-- Donations list section -->
+            <section class="list-section">
+                <h2>All Donations</h2>
+                <div class="list-controls">
+                    <button id="refreshBtn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <div id="donationsList" class="donations-list">
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Edit donation -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Donation</h2>
+            <form id="editForm" class="donation-form">
+                <input type="hidden" id="editId" name="editId">
+                
+                <div class="form-group">
+                    <label for="editDonorName">Donor Name *</label>
+                    <input type="text" id="editDonorName" name="editDonorName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDonationType">Donation Type *</label>
+                    <select id="editDonationType" name="editDonationType" required>
+                        <option value="money">💰 Money</option>
+                        <option value="food">🍽️ Food</option>
+                        <option value="clothing">👕 Clothing</option>
+                        <option value="electronics">📱 Electronics</option>
+                        <option value="furniture">🪑 Furniture</option>
+                        <option value="books">📚 Books</option>
+                        <option value="toys">🧸 Toys</option>
+                        <option value="medical">💊 Medical Supplies</option>
+                        <option value="hygiene">🧴 Hygiene Products</option>
+                        <option value="other">📦 Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editAmount">Amount/Quantity *</label>
+                    <input type="number" id="editAmount" name="editAmount" required min="0" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editEstimatedValue">Estimated Value (Optional)</label>
+                    <input type="number" id="editEstimatedValue" name="editEstimatedValue" min="0" step="0.01">
+                </div>
+                
+                <div class="form-group edit-description-field" style="display: none;">
+                    <label for="editDescription">Description *</label>
+                    <textarea id="editDescription" name="editDescription" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editContactEmail">Contact Email (Optional)</label>
+                    <input type="email" id="editContactEmail" name="editContactEmail">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editContactPhone">Contact Phone (Optional)</label>
+                    <input type="tel" id="editContactPhone" name="editContactPhone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDate">Donation Date *</label>
+                    <input type="date" id="editDate" name="editDate" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Donation</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success/Error message container -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <!-- Loading spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
